@@ -5,20 +5,12 @@
         <a href="#">
           <img :src="userImg" alt="404" />
         </a>
-        <span style="fontSize:13px;" v-if="currentUserInfo">{{currentUserInfo.nickname}}</span>
+        <span style="fontSize:13px;" v-if="currentUserInfo">{{ currentUserInfo.nickname }}</span>
         <el-button type="text" @click="dialogFormVisible = true" style="color:#fff" v-else>登录</el-button>
-        <el-button
-          @click="logout"
-          v-if="currentUserInfo !== null"
-          size="mini"
-          style="margin-top: 10px;margin-left: 15px;"
-        >退出</el-button>
+        <el-button @click="logout" v-if="currentUserInfo !== null" size="mini"
+          style="margin-top: 10px;margin-left: 15px;">退出</el-button>
         <el-dialog title="请登录~~~" :visible.sync="dialogFormVisible" width="18%">
-          <img
-            src="~assets/img/login/phone.png"
-            style="display: block;margin: 10px auto;width:18%"
-            alt
-          />
+          <img src="~assets/img/login/phone.png" style="display: block;margin: 10px auto;width:18%" alt />
           <el-form :model="form" :rules="loginInfoRules">
             <el-form-item label="手机号" :label-width="formLabelWidth">
               <el-input v-model="form.phone" autocomplete="off" placeholder="你的网易云账号"></el-input>
@@ -47,15 +39,8 @@
           </a>
         </div>
         <div class="inputSq">
-          <el-input
-            size="mini"
-            class="inputt"
-            placeholder="请输入内容"
-            v-model="input"
-            clearable
-            suffix-icon="el-icon-search"
-             @keyup.enter.native="togSearch"
-          ></el-input>
+          <el-input size="mini" class="inputt" placeholder="请输入内容" v-model="input" clearable
+            suffix-icon="el-icon-search" @keyup.enter.native="togSearch"></el-input>
         </div>
         <div>
           <a href>
@@ -99,7 +84,8 @@ import {
   getPhoneLoginOut,
   getUserSonglist,
 } from "network/login";
-import {USER_SONGLIST} from '@/store/mutationType'
+import { USER_SONGLIST } from '@/store/mutationType'
+import _ from 'lodash'
 export default {
   name: "TopBar",
   data() {
@@ -125,22 +111,27 @@ export default {
   },
   methods: {
     //返回
-    togBack(){
+    togBack() {
       this.$router.back();
     },
     //搜索框有数据则跳转页面
-    togSearch(){
-      if(this.input === ''){
-        this.$toast.show("不能为空哦~",2000);
-        return;
-      };
-       this.$router.push('/search' + this.input)
-    },
+    togSearch:_.throttle(function(){
+        if (this.input === '') {
+          this.$message({
+          message: '搜索不能为空哦~',
+          type: 'warning'
+        });
+          return;
+        };
+        this.$router.push('/search' + this.input)
+    },1000)
+
+    ,
     //获取用户的歌单 放到vuex上
     getUserSonglist(userId) {
       getUserSonglist(userId).then((res) => {
         // console.log(res.playlist);
-        this.$store.commit(USER_SONGLIST,res.playlist);
+        this.$store.commit(USER_SONGLIST, res.playlist);
       });
     },
     //退出接口登录 告诉接口已退出 并还原数据等操作
@@ -152,7 +143,7 @@ export default {
         //存储用户信息的localstorage设置为null
         window.localStorage.removeItem("currentUserInfo");
         this.userImg = require("assets/img/common/logo.png");
-        this.$store.commit(USER_SONGLIST,[]);
+        this.$store.commit(USER_SONGLIST, []);
       });
     },
     //退出登录 
@@ -229,19 +220,23 @@ export default {
   /* float: right; */
   margin-top: 18px;
 }
+
 .right a {
   color: rgba(255, 255, 255, 0.8);
   margin-right: 15px;
   text-decoration: none;
   font-size: 13px;
 }
+
 .right a:last-child {
   margin-right: 200px;
   font-size: 19px;
 }
+
 .right a:hover {
   color: #fff;
 }
+
 .center {
   color: #fff;
   /* position: absolute;
@@ -251,6 +246,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
+
 /* .center > div {
   float: left;
 } */
@@ -263,30 +259,36 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 .inputSq {
   width: 360px;
   margin-left: 15px;
   margin-top: 12px;
 }
+
 .center a i {
   font-size: 20px;
   color: rgba(255, 255, 255, 0.8);
   margin-left: 10px;
   margin-top: 15px;
 }
+
 .center a i:hover {
   color: rgba(255, 255, 255, 1);
 }
+
 .left {
   /* float: left; */
   margin-left: 20px;
   margin-top: 10px;
 }
-.left a > img {
+
+.left a>img {
   width: 36px;
   height: 36px;
   border-radius: 50%;
 }
+
 .left a {
   font-size: 14px;
   color: white;
@@ -294,27 +296,34 @@ export default {
   vertical-align: middle;
   margin-right: 5px;
 }
+
 .el-row {
   margin-bottom: 20px;
   background-color: #5292fe;
   width: 100%;
 }
+
 .el-col {
   border-radius: 4px;
 }
+
 .bg-purple-dark {
   background: #5292fe;
 }
+
 .bg-purple {
   background: blue;
 }
+
 .bg-purple-light {
   background: #5292fe;
 }
+
 .grid-content {
   border-radius: 4px;
   min-height: 80px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #5292fe;
